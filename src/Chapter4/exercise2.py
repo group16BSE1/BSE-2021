@@ -1,4 +1,4 @@
-#funtion investment
+#funtion investment Start
 def investment(c, r, n, t):
     val_of_investment = c * (1 + ((r / 100) / n)) ** t
     return val_of_investment

@@ -9,4 +9,5 @@ def computepay(hour, rate):
 
 hours = float(input('Enter Hours: '))
 rates = float(input('Enter Rate: '))
+
 print(f'Pay: {computepay(hours, rates)}')

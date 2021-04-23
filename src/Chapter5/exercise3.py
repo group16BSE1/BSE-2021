@@ -1,3 +1,19 @@
+#We have broken down this problem into various function each performing a certain task. Most of the functions return a value and we use to call another function
+#This helps us to make it simpler for us. When a function is complete, we test it to make sure it has no error
+#Since an error in one function wont affect the other ones greatly, it will help us to quickly fix the bug minus affecting the other parts of the program
+
+###################################################
+
+#GROUP 16 BSE 1 MEMBERS
+#ASIIMWWE EDGAR ----------------- 2020/BSE/014/PS
+#RUKUNDO JOSHUA ----------------- 2020/BSE/062/PS
+#OCITTI IVAN KENNETH KEITH ------ 2020/BSE/059/PS
+#MULONDO CAXTON ----------------- 2020/BSE/037/PS
+ 
+# ASSIGNMENT 3 
+
+###################################################
+
 #Global variables of stock coins
 nickels = 25
 dimes = 25
@@ -21,6 +37,7 @@ g_ones_count = 0
 g_five_count = 0 
 
 
+#Print Menu function
 def menu_message():
     print('MENU FOR DEPOSITS')
     print('n -- deposit a nickel')
@@ -29,15 +46,134 @@ def menu_message():
     print('o -- deposit a one dollar bill')
     print('f -- deposit a five dollar bill')
     print('c -- caancel the deposit')
+
+
 #Function prints the current stock value
 #Receives global variables of the coin stock as arguments
 def stock_contains(n_value, d_value, q_value, o_value, f_value):
-    print(f'{n_value:>2} -- nickels')
+    #n_value will be having a value of the global stock and print it
+    print(f'{n_value:>2} -- nickels')  
     print(f'{d_value:>2} -- dimes')
     print(f'{q_value:>2} -- quarter')
     print(f'{o_value:>2} -- one dollar bill')
     print(f'{f_value:>2} -- five dollar bill')
 
 
-print('WELCOME TO THE VENDING MACHINE CHANGE MAKER PROGRAM!\n\tCURRENT STOCK CONTAINS\n')
-stock_contains(nickels, dimes, quarters, one_dollar, five_dollar)
+#testUserInput function processes the value of the item
+#This function doesnt receive any value but returns some to the caller
+def testUserInput():
+    moneyToPay = float(input("Enter the purchase price (xx.xx) or `q' to quit: ")) #prompt the user for the money of the item/to be paid
+    status = ''
+    dollar = moneyToPay // 1 
+    cents = moneyToPay % 1
+    finalCents = round(cents,2)
+    centsToFull_digit = finalCents * 100
+    totalCents = (dollar * 100) + round(centsToFull_digit) #full cents contained in the moneyToPay variable
+    #the totalCenyts are tested to see if the satisfy the condition
+    #We use cents as whole numbers because it would be hard to implement it using a float type
+    if(totalCents % 5) == 0 and totalCents >= 0:
+        status = 'YES' #sets status to YES if it satisfies the condition
+    else:
+        status = 'NO' #And no if it doesnt
+    return status, moneyToPay, totalCents #Returns the status, moneytoPay as xx.xx and totalCents as a whole number
+    
+
+#updateStock function updates the domination stock
+#This function will be called after the machine has given out the balance
+#Afterwards, it will update the stock so that the next user views the stock thats actually available
+def updateStock(upDate_nickles, upDate_dimes, upDate_quarters, upDate_oneDollar, upDate_fiveDollar):
+    global nickels
+    global dimes
+    global quarters
+    global one_dollar
+    global five_dollar
+
+    nickels = nickels + upDate_nickles
+    dimes = dimes + upDate_dimes
+    quarters = quarters + upDate_quarters
+    one_dollar = one_dollar + upDate_oneDollar
+    five_dollar = five_dollar + upDate_fiveDollar
+
+
+#Function to determine the balance
+#Receives a value (value_toBePaid which is cents)
+def moneyUserInput(value_toBePaid):
+    #Using global so that we can be able to change the global coin counter
+    global g_nickles_count
+    global g_dimes_count
+    global g_quarters_count
+    global g_ones_count
+    global g_five_count
+    
+    #counter for coins put (denominations)
+    nickles_count = 0
+    dimes_count = 0
+    quarters_count = 0
+    ones_count = 0
+    five_count= 0 
+    #counter for coins put
+
+    cash_put = 0 #money put by the user
+    strValueCent = 0 #stores a value of either a dime etc to be processed
+    while cash_put < value_toBePaid:
+        print(f'Payment due:  dollars and  cents')
+        money = input('Indicate your deposit: ')
+        if money == 'n':
+            strValueCent = 5 
+            nickles_count += 1 #increments the coin counter for the denomination, this applies for the other denominations
+        elif money == 'd':
+            strValueCent = 10
+            dimes_count += 1
+        elif money == 'q':
+            strValueCent = 25
+            quarters_count += 1
+        elif money == 'o':
+            strValueCent = 100
+            ones_count += 1
+        elif money == 'f':
+            strValueCent = 500
+            five_count += 1
+        elif money == 'c':
+            break
+        else:
+            pass
+
+        cash_put = cash_put + strValueCent #increments the cash put after every round of user input
+
+    #Assigning the global variables new values
+    g_nickles_count = nickles_count
+    g_dimes_count = dimes_count
+    g_quarters_count = quarters_count
+    g_ones_count = ones_count
+    g_five_count = five_count
+    
+    balance = cash_put - value_toBePaid 
+    return balance
+
+
+def main():
+    print('WELCOME TO THE COIN CHANGE MAKER MACHINE')
+    while True:
+        #We call testUserInput, it returns the values which include a YES or NO and the money
+        inStatus, money_toPay, total_ofCents = testUserInput() 
+
+        #Refrence global variables
+        global g_cents_toPayConverted 
+        global g_money_toPay 
+        
+        if inStatus == 'YES': #inStatus contains a YES or NO showing that the money is valid
+            
+            #We assign values to the global variables listed below
+            #This is to enable us the values anywhere in any other function in the program without calling the function which gave us those values again
+            g_money_toPay = money_toPay
+            g_cents_toPayConverted = total_ofCents
+
+            menu_message() #Call of menu_message which we defined
+            balance_toGive = moneyUserInput(total_ofCents) #Call of this function returns the balance which we store in balance_toGive
+            #We shall use this value to pass it to the coin dispenser function
+            print(balance_toGive)
+        else:
+            print('Illegal price, Must be a non-negative multiple of 5 cents.\n')
+        
+
+main()

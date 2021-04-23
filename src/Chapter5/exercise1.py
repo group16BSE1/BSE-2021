@@ -13,4 +13,5 @@ while True:
     numCounter = numCounter+1
     total = total + num1
 
+
 print (f'Total: {total} Number of Items: {numCounter} Average: {total/numCounter}')

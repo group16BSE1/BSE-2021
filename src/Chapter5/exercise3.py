@@ -150,11 +150,63 @@ def moneyUserInput(value_toBePaid):
     balance = cash_put - value_toBePaid 
     return balance
 
+#This function solves the change issue putting into consideration of the minimum coins
+#It receives the balance to give and sorts the minimum coins to give
+#It returns the number of nickles, dimes and quarters. Plus the money due to the manager
+def changeMaker(balToGive):
+    quartersTo, balToDimes = divmod(balToGive, 25)
+    if quartersTo > quarters:
+        flag = quartersTo - quarters
+        quartersTo = quarters
+        balToDimes = balToDimes + flag * 25
+    else:
+        balToDimes = balToDimes
+        
+    dimesTo, balToNickles = divmod(balToDimes, 10)
+    if dimesTo > dimes:
+        flag = dimesTo - dimes
+        dimesTo = dimes
+        balToNickles = balToNickles + flag * 10
+    else:
+        balToNickles = balToNickles
+
+    nicklesTo, balToManager = divmod(balToNickles, 5)
+    if nicklesTo > nickels:
+        flag = nicklesTo - nickels
+        nicklesTo = nickels
+        balToManager = balToManager + flag * 5
+    else:
+        balToManager = balToManager
+
+    return quartersTo, dimesTo, nicklesTo, balToManager
+
+#Printing the coins given to the user
+def printReceipt(n_tip, d_tip, q_tip):
+    print('Please take the change below!!')
+    if q_tip > 0:
+        print(f'{q_tip} -- Quarters')
+    if d_tip > 0:
+        print(f'{d_tip} -- Dimes')
+    if n_tip > 0:
+        print(f'{n_tip} -- Nickles')
+
+#Deducts coins after the transaction has been made
+#Updates the stock coins
+def deductStock(upDate_nickles, upDate_dimes, upDate_quarters):
+    global nickels
+    global dimes
+    global quarters
+    
+    nickels = nickels - upDate_nickles
+    dimes = dimes - upDate_dimes
+    quarters = quarters - upDate_quarters  
 
 def main():
     print('WELCOME TO THE COIN CHANGE MAKER MACHINE')
     while True:
         #We call testUserInput, it returns the values which include a YES or NO and the money
+        print('\n\nStock contains!!!')
+        stock_contains(nickels, dimes, quarters, one_dollar, five_dollar)
         inStatus, money_toPay, total_ofCents = testUserInput() 
 
         #Refrence global variables
@@ -171,9 +223,20 @@ def main():
             menu_message() #Call of menu_message which we defined
             balance_toGive = moneyUserInput(total_ofCents) #Call of this function returns the balance which we store in balance_toGive
             #We shall use this value to pass it to the coin dispenser function
-            print(balance_toGive)
+            updateStock(g_nickles_count, g_dimes_count, g_quarters_count, g_ones_count, g_five_count)
+            if balance_toGive == 0:
+                print('There is no change for you!!!')
+            else:
+                quartersTo, dimesTo, nicklesTo, balToManager = changeMaker(balance_toGive)
+                quartersTo, dimesTo, nicklesTo, balToManager = round(quartersTo), round(dimesTo), round(nicklesTo), round(balToManager)
+                if balToManager == 0:
+                    printReceipt(nicklesTo, dimesTo, quartersTo)
+                else:
+                    printReceipt(nicklesTo, dimesTo, quartersTo)
+                    print('\n\n')
+                    print(f'Amount due is: {balToManager // 100} dollars and {balToManager & 100} cents')
+                deductStock(nicklesTo, dimesTo, quartersTo)
         else:
             print('Illegal price, Must be a non-negative multiple of 5 cents.\n')
-        
 
 main()

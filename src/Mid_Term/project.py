@@ -25,8 +25,9 @@ def commercial_user(galon_units):
     return total  
 
 
+#Function for the industrial users
 def industrial_user(galon_units):
-    galon_units = galon_units / 10
+    galon_units = galon_units
     if galon_units <= 4000000:
         total = 1000.00
     elif galon_units > 4000000 and galon_units <= 10000000: 
@@ -37,6 +38,16 @@ def industrial_user(galon_units):
     return total    
 
 
+#This functions prints the details including the cost of water usage
+def printDetails(user_code, start_units, end_units, diff_units, cost_of_Units):
+    print('\n\n')
+    print(f'Customer code: {user_code}')
+    print(f'Beginning metre reading: {start_units}')
+    print(f'Ending metre reading: {end_units}')
+    print(f'Galons of water used: {diff_units}')
+    print(f'Amount billed: ${cost_of_Units}')
+    print('\n')
+
 def main():
     while True:
         user_code = input("ENTER CUSTOMER CODE: ").lower()
@@ -46,15 +57,14 @@ def main():
             diff_units = differnce_check(start_units, end_units) #calculates difference of the units
             if user_code == 'r':
                 cost_of_Units = residential_user(diff_units)
-                print(cost_of_Units)
             elif user_code == 'c':
                 cost_of_Units = commercial_user(diff_units)
-                print(cost_of_Units)
             elif user_code == 'i':
                 cost_of_Units = industrial_user(diff_units) 
-                print(cost_of_Units)
         else:
             break
 
+        printDetails(user_code, start_units, end_units, diff_units, cost_of_Units)
+        
     
 main()

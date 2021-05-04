@@ -25,6 +25,18 @@ def commercial_user(galon_units):
     return total  
 
 
+def industrial_user(galon_units):
+    galon_units = galon_units / 10
+    if galon_units <= 4000000:
+        total = 1000.00
+    elif galon_units > 4000000 and galon_units <= 10000000: 
+        total = 2000.00    
+    else:
+        total = 2000.00 + (0.000025 * galon_units)
+    
+    return total    
+
+
 def main():
     while True:
         user_code = input("ENTER CUSTOMER CODE: ").lower()
@@ -38,6 +50,11 @@ def main():
             elif user_code == 'c':
                 cost_of_Units = commercial_user(diff_units)
                 print(cost_of_Units)
+            elif user_code == 'i':
+                cost_of_Units = industrial_user(diff_units) 
+                print(cost_of_Units)
+        else:
+            break
 
     
 main()

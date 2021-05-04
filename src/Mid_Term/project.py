@@ -45,7 +45,7 @@ def printDetails(user_code, start_units, end_units, diff_units, cost_of_Units):
     print(f'Beginning metre reading: {start_units}')
     print(f'Ending metre reading: {end_units}')
     print(f'Galons of water used: {diff_units}')
-    print(f'Amount billed: ${cost_of_Units}')
+    print(f'Amount billed: ${cost_of_Units:.2f}')
     print('\n')
 
 def main():
@@ -64,6 +64,7 @@ def main():
         else:
             break
 
+        
         printDetails(user_code, start_units, end_units, diff_units, cost_of_Units)
         
     

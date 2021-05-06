@@ -64,7 +64,6 @@ def main():
         else:
             break
 
-        
         printDetails(user_code, start_units, end_units, diff_units, cost_of_Units)
         
     
